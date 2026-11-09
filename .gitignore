@@ -11,4 +11,5 @@ node_modules/
 *.log
 *.zip
 test-results/
+output/
 /Hive_Inspect_Template_Importer_Assignment*.pdf
