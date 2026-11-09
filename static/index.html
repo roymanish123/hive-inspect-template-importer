@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Bring your inspection templates across with their wording, structure and source evidence intact.">
+  <meta name="theme-color" content="#202d2b">
+  <title>Template Workshop | Inspection template importer</title>
+  <link rel="icon" href="/static/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="library">
+      <a class="brand" href="/" aria-label="Template Workshop home"><img src="/static/mark.svg" alt="" width="35" height="35"><span>Template<br><strong>Workshop</strong></span></a>
+      <div class="library-heading"><span>YOUR LIBRARY</span><span id="template-count">0</span></div>
+      <nav id="templates" aria-label="Saved templates"><div class="loading">Loading templates…</div></nav>
+      <button class="import-library" id="import-button"><span aria-hidden="true">＋</span> Import a template</button>
+      <div class="library-bottom"><span class="storage-dot"></span><span id="storage-label">Connecting to database</span><p>A private sample workspace.<br>Saved on the server, kept across visits.</p></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><div class="breadcrumb">Library <span>/</span> <span id="breadcrumb-title">Template editor</span></div><div class="save-controls"><span id="save-status" role="status" aria-live="polite">Opening workspace</span><button id="save-button" class="button primary" disabled>Save changes <span aria-hidden="true">↗</span></button></div></header>
+      <main>
+        <section class="template-header" aria-label="Template overview">
+          <div class="eyebrow"><span class="small-mark"></span> INSPECTION TEMPLATES</div>
+          <div class="title-row"><div><input id="template-name" class="title-input" aria-label="Template name" maxlength="250" placeholder="Your template"><p id="template-description">Your expertise, carried forward.</p></div><button class="button secondary" id="copy-button">Duplicate template <span aria-hidden="true">⧉</span></button></div>
+          <div class="summary-row"><div id="template-stats" class="template-stats"></div><button class="text-button" id="audit-button">View import evidence <span aria-hidden="true">↗</span></button></div>
+        </section>
+        <div id="notice" class="notice" hidden></div>
+        <section class="editor-shell" aria-label="Template editor">
+          <aside class="outline"><div class="panel-heading"><h2>Sections</h2><span id="section-count" class="count-badge">0</span></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Find a section or comment" aria-label="Search template"></label><nav id="sections" aria-label="Template sections"></nav><div class="outline-foot">Original structure. Editable details.</div></aside>
+          <div class="content-panel"><div id="editor" class="loading">Preparing your template…</div></div>
+          <aside id="context" class="context-panel"><div class="panel-heading"><h2>Source & confidence</h2></div><div id="context-content"></div></aside>
+        </section>
+        <footer class="app-footer"><span>Built for the work you have already put in.</span><span>Sample material only · Keep browser cookies to return to your work.</span></footer>
+      </main>
+    </div>
+  </div>
+  <dialog id="import-dialog" aria-labelledby="import-title"><div class="dialog-top"><div><span class="eyebrow">BRING YOUR WORK WITH YOU</span><h2 id="import-title">Import a template</h2></div><button class="icon-button" data-close="import-dialog" aria-label="Close import">×</button></div><div id="import-content"></div></dialog>
+  <dialog id="audit-dialog" class="wide-dialog" aria-labelledby="audit-title"><div class="dialog-top"><div><span class="eyebrow">NO SILENT LOSSES</span><h2 id="audit-title">Import evidence</h2></div><button class="icon-button" data-close="audit-dialog" aria-label="Close evidence">×</button></div><div id="audit-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
