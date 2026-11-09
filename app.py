@@ -29,7 +29,7 @@ def load_env():
 
 def create_app(config=None):
     load_env()
-    app = Flask(__name__, static_folder="static", static_url_path="/static")
+    app = Flask(__name__, static_folder="public/static", static_url_path="/static")
     production = bool(os.getenv("VERCEL"))
     secret = os.getenv("APP_SECRET", "")
     if not secret and not production and not config:
@@ -55,6 +55,13 @@ def create_app(config=None):
 
     def fail(message, status=400, **extra):
         return jsonify({"error": message, **extra}), status
+
+    def json_object():
+        payload = request.get_json()
+        if not isinstance(payload, dict):
+            from flask import abort
+            abort(400, description="Request body must be a JSON object.")
+        return payload
 
     def workspace():
         if "workspace_id" not in session:
@@ -112,7 +119,7 @@ def create_app(config=None):
 
     @app.get("/")
     def index():
-        return app.send_static_file("index.html")
+        return send_file(ROOT / "public" / "static" / "index.html")
 
     @app.get("/api/health")
     def health():
@@ -165,7 +172,7 @@ def create_app(config=None):
 
     @app.post("/api/imports/<import_id>/commit")
     def commit_import(import_id):
-        payload = request.get_json() or {}
+        payload = json_object()
         name = payload.get("name", "")
         if not isinstance(name, str) or not name.strip() or len(name) > 250:
             return fail("Give the template a name between 1 and 250 characters.")
@@ -189,7 +196,7 @@ def create_app(config=None):
 
     @app.patch("/api/templates/<template_id>")
     def save_edits(template_id):
-        payload = request.get_json() or {}
+        payload = json_object()
         changes = payload.get("changes")
         revision = payload.get("revision")
         if type(revision) is not int or not isinstance(changes, list) or not 1 <= len(changes) <= 500:
@@ -207,6 +214,8 @@ def create_app(config=None):
             for change in changes:
                 if not isinstance(change, dict):
                     return fail("Invalid edit.")
+                if not all(isinstance(change.get(key), str) for key in ("entity", "id", "field")):
+                    return fail("Edit entity, id and field must be strings.")
                 target = allowed.get((change.get("entity"), change.get("id")))
                 field, value = change.get("field"), change.get("value")
                 if not target or field not in target[1] or not isinstance(value, str):
@@ -249,9 +258,16 @@ def create_app(config=None):
         expected = {(c["sheet"], c["row"]): c["original_html"] for s in parsed["sections"] for i in s["items"] for c in i["comments"]}
         current = [c for s in template["sections"] for i in s["items"] for c in i["comments"]]
         mismatches = [f"{c['source_sheet']}:{c['source_row']}" for c in current if expected.get((c["source_sheet"], c["source_row"])) != c["original_html"]]
+        actual_keys = [(c["source_sheet"], c["source_row"]) for c in current]
+        expected_positions = {(s["sheet"], s["row"], i["sheet"], i["row"], c["sheet"], c["row"]): (s["position"], i["position"], c["position"])
+            for s in parsed["sections"] for i in s["items"] for c in i["comments"]}
+        actual_positions = {(s["source_sheet"], s["source_row"], i["source_sheet"], i["source_row"], c["source_sheet"], c["source_row"]): (s["position"], i["position"], c["position"])
+            for s in template["sections"] for i in s["items"] for c in i["comments"]}
         checks = {"source_checksum_matches": hashlib.sha256(base64.b64decode(source["source_base64"])).hexdigest() == source["sha256"],
                   "all_source_rows_accounted_for": len(rows) == template["report"]["counts"]["source_rows"],
-                  "original_comment_html_matches": not mismatches and len(current) == len(expected)}
+                  "original_comment_html_matches": not mismatches and len(actual_keys) == len(expected) and set(actual_keys) == set(expected),
+                  "hierarchy_and_order_match": actual_positions == expected_positions and len(template["sections"]) == len(parsed["sections"])
+                      and sum(len(s["items"]) for s in template["sections"]) == template["report"]["counts"]["items"]}
         return jsonify({"report": template["report"], "checks": checks, "mismatches": mismatches,
                         "edited_comments": sum(c["html"] != c["original_html"] for c in current), "rows": [json.loads(r["evidence_json"]) for r in rows]})
 
@@ -270,7 +286,7 @@ def create_app(config=None):
 
     @app.post("/api/render")
     def render_preview():
-        html = (request.get_json() or {}).get("html")
+        html = json_object().get("html")
         if not isinstance(html, str) or len(html) > 200000:
             return fail("Provide comment HTML within the 200,000 character limit.")
         return jsonify(render_html(html))

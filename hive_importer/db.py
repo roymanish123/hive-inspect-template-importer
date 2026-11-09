@@ -47,6 +47,8 @@ class Database:
             import psycopg
             from psycopg.rows import dict_row
             raw = psycopg.connect(self.url, row_factory=dict_row, connect_timeout=10, prepare_threshold=None)
+            # Keep sample workspace data out of Supabase's default exposed public schema.
+            raw.execute("SET search_path TO hive_workshop")
         else:
             raw = sqlite3.connect(self.path, timeout=30)
             raw.row_factory = sqlite3.Row
@@ -65,6 +67,7 @@ class Database:
         with self.connect() as conn:
             if self.url:
                 conn.execute("SELECT pg_advisory_xact_lock(71403211)")
+                conn.execute("CREATE SCHEMA IF NOT EXISTS hive_workshop")
             for statement in (ROOT / "migrations" / "001_initial.sql").read_text().split(";"):
                 if statement.strip():
                     conn.execute(statement)

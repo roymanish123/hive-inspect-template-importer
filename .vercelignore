@@ -1,0 +1,15 @@
+.git
+.venv
+.data
+.pytest_cache
+__pycache__
+**/__pycache__
+.env
+.env.*
+tests
+tmp
+output
+*.pdf
+*.zip
+NOTES.md
+docs

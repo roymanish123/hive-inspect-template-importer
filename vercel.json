@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {"app.py": {"maxDuration": 60}},
-  "rewrites": [{"source": "/(.*)", "destination": "/app.py"}]
+  "framework": "flask",
+  "functions": {"app.py": {"maxDuration": 60, "includeFiles": "{public/**,migrations/**,examples/*.csv}", "excludeFiles": "{tests/**,tmp/**,.venv/**,.data/**,output/**}"}},
+  "headers": [{"source": "/static/(.*)", "headers": [{"key": "X-Content-Type-Options", "value": "nosniff"}, {"key": "Referrer-Policy", "value": "no-referrer"}]}]
 }

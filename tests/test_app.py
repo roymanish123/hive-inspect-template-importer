@@ -148,3 +148,25 @@ def test_export_is_structured_and_provenance_immutable(configured):
     assert data['sections'][0]['items'][0]['comments'][0]['original_html']
     assert client.get('/api/templates').headers['Cache-Control']=='no-store'
     assert 'frame-ancestors' in client.get('/').headers['Content-Security-Policy']
+
+
+@pytest.mark.parametrize('payload', [[], None, 'invalid', 42])
+def test_malformed_json_returns_actionable_failure(configured, payload):
+    app,_=configured;client=app.test_client();headers=bootstrap(client)
+    response=client.post('/api/render',data=json.dumps(payload),content_type='application/json',headers=headers)
+    assert response.status_code==400 and 'JSON object' in response.get_json()['error']
+
+
+def test_unhashable_edit_target_does_not_crash(configured):
+    app,_=configured;client=app.test_client();headers=bootstrap(client);t=first(client)
+    response=client.patch('/api/templates/'+t['id'],json={'revision':1,'changes':[{'entity':[], 'id':{}, 'field':'name','value':'bad'}]},headers=headers)
+    assert response.status_code==400
+    assert client.get('/api/templates/'+t['id']).get_json()['revision']==1
+
+
+def test_audit_detects_order_corruption(configured):
+    app,_=configured;client=app.test_client();bootstrap(client);t=first(client)
+    with app.extensions['database'].connect() as conn:
+        conn.execute('UPDATE comments SET position=100 WHERE id=?',(comment(t)['id'],))
+    result=client.get(f"/api/templates/{t['id']}/audit").get_json()
+    assert result['checks']['hierarchy_and_order_match'] is False
