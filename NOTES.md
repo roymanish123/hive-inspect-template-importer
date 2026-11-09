@@ -34,7 +34,7 @@ There are two separate kinds of limitation: (1) information absent from a file c
 
 ## Verification and honest limits
 
-Automated checks pass locally; exact results are recorded in `docs/VERIFICATION.md` and `docs/http-smoke-results.json`. Tests use SQLite and generated binary XLSX fixtures, including an independent adversarial template. They prove persistence across new application instances, save/retrieve behavior, unchanged originals after copy edits, explicit import failures, and corruption detection. JavaScript syntax is checked with Node. A real HTTP smoke test separately exercises the running server.
+Verification completed on 9 November 2026: **41 automated tests passed**, **15 real HTTP checks passed**, JavaScript syntax checks passed, and installed dependencies had no reported conflicts. Tests use SQLite and generated binary XLSX fixtures, including an independent adversarial template. They prove persistence across new application instances, save/retrieve behavior, unchanged originals after copy edits, explicit import failures, and corruption detection. The HTTP checks separately exercised the running server, application assets, upload/commit, saved edits and copies, source audits, and rejected imports. The tests and HTTP check script remain available to reproduce the checks.
 
 Browser automation could not access a usable browser session: browser access was unavailable, and native app access timed out. No visual or interactive browser test is claimed. PostgreSQL pooler behavior, Vercel packaging and live performance need verification in the target deployment. XLS support is implemented with xlrd, but a genuine legacy XLS export has not been tested. Published spreadsheet columns are not a substitute for a genuine export from a Spectora trial.
 
@@ -42,7 +42,7 @@ Browser automation could not access a usable browser session: browser access was
 
 This implementation is **not yet a submission-complete assessment**. No authenticated Hive/Spectora trial was available. The required hands-on Hive inspection and published sample report, actual template-import experience, and Spectora template selection/export were not performed. The seed is clearly synthetic; its provenance is documented. Optional Binsr exploration was omitted to focus implementation time on the required migration baseline, and no firsthand comparison is claimed.
 
-A real Spectora HTML-text export must be added with its template name, origin and checksum, then validated and imported in the live deployment. A Vercel URL backed by PostgreSQL and a hosted repository with reviewer access are still needed. The implementation includes local development commits; no remote repository or public deployment was fabricated. Product research is documentation-based and labeled accordingly in `docs/PRODUCT_RESEARCH.md`.
+A real Spectora HTML-text export must be added with its template name, origin and checksum, then validated and imported in the live deployment. A Vercel URL backed by PostgreSQL is still needed. The source repository and development history are available at [roymanish123/hive-inspect-template-importer](https://github.com/roymanish123/hive-inspect-template-importer). Product research used official documentation rather than hands-on trials. Hive's documentation describes upload, editable hierarchy, duplication and explicit saving; migration evidence and clear save status informed this implementation, but no firsthand product defect or Binsr comparison is claimed.
 
 ## Approximate effort and contribution
 

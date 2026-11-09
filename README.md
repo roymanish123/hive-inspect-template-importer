@@ -2,6 +2,8 @@
 
 A working desktop web app for importing inspection templates, reviewing preservation evidence, editing their contents and making independent copies.
 
+Repository: [roymanish123/hive-inspect-template-importer](https://github.com/roymanish123/hive-inspect-template-importer).
+
 **Implementation status:** local app and SQLite persistence are verified. Vercel/PostgreSQL deployment, a genuine Spectora account export and hands-on product trials remain outstanding. The included seed is explicitly synthetic. See `NOTES.md` and `examples/PROVENANCE.md` before treating this as a completed submission.
 
 ## Run locally
@@ -15,7 +17,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe app.py
 ```
 
-Open **http://127.0.0.1:5000**. Dependencies have already been installed in this workspace; `START_APP.cmd` also starts the app. If the server is already running, use the existing address.
+After setup, open **http://127.0.0.1:5000**. On Windows, `START_APP.cmd` also starts the app. Keep the server running while using the application.
 
 macOS/Linux equivalents:
 
@@ -70,7 +72,7 @@ Vercel setup:
 
 On Vercel, startup refuses to fall back to local SQLite or an empty signing secret. Serverless filesystem storage would not provide durable persistence.
 
-Deployment was not performed in this session: Vercel, Supabase and GitHub connections were not authenticated. No public URL or hosted repository is claimed.
+The source repository is available on GitHub. A public application deployment has not been created; Vercel and persistent PostgreSQL hosting still need to be configured and verified.
 
 ## Verification
 
@@ -92,11 +94,8 @@ Tests cover exact HTML/text, hierarchy, ordering, second-template generalization
 - `public/static/`: plain JavaScript/CSS interface; no frontend build dependencies.
 - `examples/`: seed, adversarial example, failure example and honest provenance.
 - `tests/`: preservation and backend integration tests.
-- `scripts/`: seed generation, standalone validation, database initialization and HTTP checks.
-- `docs/`: implementation decisions, verification evidence and product research.
+- `scripts/`: standalone validation, database initialization and HTTP checks.
 
 No starter code was copied. Dependencies and primary documentation are credited in `NOTES.md`.
 
-## Packaged handoff
-
-`output/Hive_Template_Workshop_Solution.zip` contains the tracked source plus `repository-history.bundle` and a readable commit list. It excludes dependencies, local database contents, session secrets, credentials and the supplied assignment PDF. To restore the actual development history from the extracted package, run `git clone repository-history.bundle restored-repository`. The original workspace also retains its `.git` repository.
+Development history is preserved in Git. The app creates its local database and sample workspace when started.
