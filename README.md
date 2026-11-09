@@ -96,3 +96,7 @@ Tests cover exact HTML/text, hierarchy, ordering, second-template generalization
 - `docs/`: implementation decisions, verification evidence and product research.
 
 No starter code was copied. Dependencies and primary documentation are credited in `NOTES.md`.
+
+## Packaged handoff
+
+`output/Hive_Template_Workshop_Solution.zip` contains the tracked source plus `repository-history.bundle` and a readable commit list. It excludes dependencies, local database contents, session secrets, credentials and the supplied assignment PDF. To restore the actual development history from the extracted package, run `git clone repository-history.bundle restored-repository`. The original workspace also retains its `.git` repository.
