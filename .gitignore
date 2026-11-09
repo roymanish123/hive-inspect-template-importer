@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.data/
+.env
+.env.*
+!.env.example
+.vercel/
+tmp/
+node_modules/
+*.log
+*.zip
+test-results/

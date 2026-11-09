@@ -1,0 +1,6 @@
+Section Name,Item Name,Comment Name,Comment Text,Comment Type,Order (w/i item),Custom Setting
+Roof,Flashing,Second,"<p>Keep <strong>bold</strong>, commas, and <a href=""https://example.com/a?x=1&amp;y=2"">links</a>.</p>",defect,2,Retain this value
+Roof,Flashing,First,"<p>Unicode: café · 日本語 · “quotes”</p>",info,1,
+,,Third,"<p>Continued hierarchy.</p><iframe src=""https://example.com""></iframe>",limit,3,
+Exterior,Cladding,Duplicate title,<p>Separate section.</p>,info,1,
+Roof,Flashing,Duplicate title,<p>Distinct repeated section occurrence.</p>,info,1,
